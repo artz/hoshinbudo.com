@@ -1,0 +1,58 @@
+<?php
+/**
+ * The template for displaying Archive pages.
+ *
+ * Used to display archive-type pages if nothing more specific matches a query.
+ * For example, puts together date-based pages if no date.php file exists.
+ *
+ * Learn more: http://codex.wordpress.org/Template_Hierarchy
+ *
+ * @package WordPress
+ * @subpackage Twenty_Ten
+ * @since Twenty Ten 1.0
+ */
+
+get_header(); ?>
+<div class="content">
+<div class="recent-articles">
+<?php
+	/* Queue the first post, that way we know
+	 * what date we're dealing with (if that is the case).
+	 *
+	 * We reset this later so we can run the loop
+	 * properly with a call to rewind_posts().
+	 */
+	if ( have_posts() )
+		the_post();
+?>
+
+			<h1 class="page-title">
+<?php if ( is_day() ) : ?>
+				<?php printf( __( 'Day of <span>%s</span>', 'hoshin' ), get_the_date() ); ?>
+<?php elseif ( is_month() ) : ?>
+				<?php printf( __( 'Month of <span>%s</span>', 'hoshin' ), get_the_date('F Y') ); ?>
+<?php elseif ( is_year() ) : ?>
+				<?php printf( __( 'Year of <span>%s</span>', 'hoshin' ), get_the_date('Y') ); ?>
+<?php else : ?>
+				<?php _e( 'Blog Archives', 'twentyten' ); ?>
+<?php endif; ?>
+			</h1>
+
+<?php
+	/* Since we called the_post() above, we need to
+	 * rewind the loop back to the beginning that way
+	 * we can run the loop properly, in full.
+	 */
+	rewind_posts();
+?>
+<?php while ( have_posts() ) : the_post(); ?>
+<h2><a href="<?=the_permalink()?>"><?=the_title()?></a></h2>
+<i><?=the_date()?></i>
+<?=the_excerpt()?> <a class="more" href="<?=the_permalink()?>">Read More</a>
+<?php endwhile; ?>
+</div>
+<div class="aside">
+<?php get_sidebar("articles"); ?>
+</div>
+</div>
+<?php get_footer(); ?>
